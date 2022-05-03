@@ -1,0 +1,97 @@
+<% extend('../../main/main') %>
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                                <li class="breadcrumb-item text-capitalize"><a href="/<%= title[1][0] %>"><%= title[1][0] %></a></li>
+                                <% if (title[2] != "") { %>
+                                    <li class="breadcrumb-item text-capitalize active"><%= title[2] %></li>
+                                <% } %>
+                            </ol>
+                        </div>
+                        <h4 class="page-title text-capitalize"><%= title[1][0] %></h4>
+                    </div>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form class="form-horizontal" action="<%= locals.data ? '/banners/update' : '/banners/store' %>" method="post" enctype="multipart/form-data">
+                                <% if(locals.data) {%>
+                                    <input type="hidden" value="<%= locals.data._id %>" name="_id">
+                                    <!-- <input name="_method" type="hidden" value="put"> -->
+                                <% } %>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Upload Banner Disini</label>
+                                    <div class="col-9">
+                                        <input type="file" name="image" data-plugins="dropify" data-height="300" />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="title" class="col-3 col-form-label">Judul Banner</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.title : '' %>" name="title" class="form-control" id="title" placeholder="Judul Banner">
+                                        <% if(locals.error && locals.fields.title) {%> 
+                                            <p class="text-danger"><%= locals.fields.title.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="description" class="col-3 col-form-label">Deskripsi</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.description : '' %>" name="description" class="form-control" id="description" placeholder="Deskripsi">
+                                        <% if(locals.error && locals.fields.description) {%> 
+                                            <p class="text-danger"><%= locals.fields.description.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="link" class="col-3 col-form-label">Link</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.link : '' %>" name="link" class="form-control" id="link" placeholder="Link">
+                                        <% if(locals.error && locals.fields.link) {%> 
+                                            <p class="text-danger"><%= locals.fields.link.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3 justify-content-end">
+                                    <div class="col-9">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" <%= locals.data ? locals.data.is_active == 1 ? 'checked' : '' : '' %> name="is_active" class="custom-control-input" id="checkmeout">
+                                            <label class="custom-control-label" for="checkmeout">Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-0 justify-content-end row">
+                                    <div class="col-9">
+                                        <button type="submit" class="btn btn-info waves-effect waves-light" style="float: right;">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% if(locals.data) {%> 
+    <% if(locals.data.image_url && locals.data.image_url != "") {%> 
+        <script>
+            $(document).ready(function () {
+                let image = `<%= locals.data.image_url %>`
+                $('.dropify-loader').css("display","none");
+                $('.dropify-preview').css("display","block");
+                $('.dropify-clear').css("display","block");
+                $('.dropify-filename-inner').html(image);
+                $('.dropify-preview').find('.dropify-render').append('<img src="/images/banners/'+image+'" alt="image">');
+            });
+        </script>
+    <% } %> 
+<% } %> 

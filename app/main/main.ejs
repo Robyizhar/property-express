@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Adino Web Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+        <!--  style  -->
+        <%- include('./style'); %>
+    </head>
+
+    <body data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed", "sidebar": { "color": "light", "size": "default", "showuser": false}, "topbar": {"color": "dark"}, "showRightSidebarOnPageLoad": true}'>
+
+        <div id="wrapper">
+            <!--  navbar  -->
+            <%- include('./navbar'); %>
+            <!--  sidebar  -->
+            <%- include('./sidebar'); %>
+            
+            <%- content %>
+        </div>
+        <!--  script  -->
+        <%- include('./script'); %>
+    </body>
+</html>
