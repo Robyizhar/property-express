@@ -57,11 +57,15 @@ let thisMenu = function (req, res, next) {
 }
 app.use(thisMenu)
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
+const api = require('./routes/api');
 const Banner = require('./app/banner/router');
 const Blog = require('./app/blog/router');
 
 app.use('/', indexRouter);
+app.use('/api', api);
+
+// ADMIN ROUTES
 app.use('/banners', Banner);
 app.use('/blogs', Blog);
 
