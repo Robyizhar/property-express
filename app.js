@@ -59,9 +59,11 @@ app.use(thisMenu)
 
 var indexRouter = require('./routes/index');
 const Banner = require('./app/banner/router');
+const Blog = require('./app/blog/router');
 
 app.use('/', indexRouter);
 app.use('/banners', Banner);
+app.use('/blogs', Blog);
 
 app.use(function(req, res, next) {
   next(createError(404));
