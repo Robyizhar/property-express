@@ -1,5 +1,5 @@
 const csv = require('csvtojson');
-const path = require('path')
+const path = require('path');
 
 async function provinces(req, res, next) {
     try {

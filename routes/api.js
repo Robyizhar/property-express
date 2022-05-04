@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/province', DataArea.provinces);
+router.get('/provinces', DataArea.provinces);
 router.get('/cities', DataArea.cities);
 router.get('/districts', DataArea.districts);
 router.get('/villages', DataArea.villages);

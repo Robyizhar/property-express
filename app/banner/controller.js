@@ -107,7 +107,8 @@ async function edit(req, res, next) {
         let data = await Model.findOne({_id: req.params.id});
         res.render('banner/view/form', { 
             title: req.thisMenu, 
-            data: data
+            data: data, 
+            edit: true
         });
     } catch (error) {
         res.render('main/404',{ 
@@ -150,7 +151,8 @@ async function update(req, res, next) {
                             title: req.thisMenu ,
                             message: error.message, 
                             fields: error.errors, 
-                            data: req.body
+                            data: req.body, 
+                            edit: true
                         });
                     }
                     next(error);
@@ -171,7 +173,8 @@ async function update(req, res, next) {
                 title: req.thisMenu ,
                 message: error.message, 
                 fields: error.errors, 
-                data: req.body
+                data: req.body, 
+                edit: true
             });
         }
         next(error);

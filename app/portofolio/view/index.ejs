@@ -23,7 +23,7 @@
                 <div class="col-lg-12">
                     <div class="card-box">
                         <div class="table-responsive">
-                            <a href="/blogs/create" type="button" class="btn btn-secondary waves-effect text-capitalize">create <%= title[1][0] %></a> 
+                            <a href="/portofolios/create" type="button" class="btn btn-secondary waves-effect text-capitalize">create <%= title[1][0] %></a> 
                             <table data-toggle="table"
                                     data-search="true"
                                     data-sort-name="id"
@@ -45,8 +45,8 @@
                                         <!-- <td><a href="<%= //value.link %>" target="_blank" rel="noopener noreferrer">Link</a></td> -->
                                         <td><%= value.is_active == 1 ? 'Aktiv' : 'Inaktiv' %></td>
                                         <td>
-                                            <a href="/blogs/edit/<%= value._id %>" class="btn btn-sm btn-primary waves-effect text-capitalize">Edit</a>
-                                            <a href="/blogs/destroy/<%= value._id %>" class="btn btn-sm btn-danger waves-effect text-capitalize btn-delete">Delete</a>
+                                            <a href="/portofolios/edit/<%= value._id %>" class="btn btn-sm btn-primary waves-effect text-capitalize">Edit</a>
+                                            <a href="/portofolios/destroy/<%= value._id %>" class="btn btn-sm btn-danger waves-effect text-capitalize btn-delete">Delete</a>
                                         </td>
                                     </tr>
                                     <% }); %>
@@ -59,7 +59,7 @@
                                     <% if (current == 1) { %>
                                         <li class="page-item disabled"><a class="page-link">First</a></li>
                                     <% } else { %>
-                                        <li  class="page-item"><a class="page-link" href="/blogs?page=1">First</a></li>
+                                        <li  class="page-item"><a class="page-link" href="/portofolios?page=1">First</a></li>
                                     <% } %>
                                     <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
                                     <% if (i !== 1) { %>
@@ -69,7 +69,7 @@
                                         <% if (i == current) { %>
                                             <li class="active"><a class="page-link"><%= i %></a></li>
                                         <% } else { %>
-                                            <li  class="page-item"><a class="page-link" href="/blogs?page=<%= i %>"><%= i %></a></li>
+                                            <li  class="page-item"><a class="page-link" href="/portofolios?page=<%= i %>"><%= i %></a></li>
                                         <% } %>
                                         <% if (i == Number(current) + 4 && i < pages) { %>
                                             <li class="page-item disabled"><a class="page-link">...</a></li>
@@ -78,7 +78,7 @@
                                     <% if (current == pages) { %>
                                         <li class="page-item disabled"><a class="page-link">Last</a></li>
                                     <% } else { %>
-                                        <li  class="page-item"><a class="page-link" href="/blogs?page=<%= pages %>">Last</a></li>
+                                        <li  class="page-item"><a class="page-link" href="/portofolios?page=<%= pages %>">Last</a></li>
                                     <% } %>
                                 </ul>
                             </nav>

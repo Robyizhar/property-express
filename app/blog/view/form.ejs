@@ -22,8 +22,8 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <form class="form-horizontal" action="<%= locals.data ? '/blogs/update' : '/blogs/store' %>" method="post" enctype="multipart/form-data">
-                                <% if(locals.data) {%>
+                            <form class="form-horizontal" action="<%= locals.edit ? '/blogs/update' : '/blogs/store' %>" method="post" enctype="multipart/form-data">
+                                <% if(locals.edit) {%>
                                     <input type="hidden" value="<%= locals.data._id %>" name="_id">
                                     <!-- <input name="_method" type="hidden" value="put"> -->
                                 <% } %>

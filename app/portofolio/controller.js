@@ -16,7 +16,7 @@ async function index(req, res, next) {
             .exec(function(err, results) {
                 Model.count().exec(function(err, count) {
                     if (err) return next(err)
-                    res.render('blog/view/index', {
+                    res.render('portofolio/view/index', {
                         title: req.thisMenu,
                         results: results,
                         current: page,
@@ -33,7 +33,7 @@ async function index(req, res, next) {
 
 async function create(req, res, next) {
     try {
-        res.render('blog/view/form', {
+        res.render('portofolio/view/form', {
             title: req.thisMenu
         });
     } catch (error) {
@@ -46,16 +46,21 @@ async function create(req, res, next) {
 async function store(req, res, next) {
     try {
         let payload = req.body;
+        
         if (payload.is_active) {
             payload = {...payload, is_active: 1};
         } else {
             payload = {...payload, is_active: 0};
         }
+
+        if(payload.price)
+            payload = {...payload, price: payload.price.replace(/[^0-9]/g, "")};
+
         if (req.file) {
             let tmp_path = req.file.path;
             let originalExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
             let filename = req.file.filename + '.' + originalExt;
-            let target_path = path.resolve(config.rootPath, `public/images/blogs/${filename}`);
+            let target_path = path.resolve(config.rootPath, `public/images/portofolios/${filename}`);
             const src = fs.createReadStream(tmp_path); // baca file yang masih di lokasi sementara 
             const dest = fs.createWriteStream(target_path); // pindahkan file ke lokasi permanen
             src.pipe(dest); // mulai pindahkan file dari `src` ke `dest`
@@ -64,11 +69,11 @@ async function store(req, res, next) {
                     let data = new Model({...payload, image_url: filename});
                     await data.save();
                     // return res.json(data);
-                    return res.redirect('/blogs');
+                    return res.redirect('/portofolios');
                 } catch (error) {
                     fs.unlinkSync(target_path);
                     if(error && error.name === 'ValidationError'){
-                        return res.render('blog/view/form', {
+                        return res.render('portofolio/view/form', {
                             error: 1, 
                             title: req.thisMenu ,
                             message: error.message, 
@@ -86,11 +91,11 @@ async function store(req, res, next) {
             let data = new Model(payload);
             await data.save();
             // return res.json(data);
-            return res.redirect('/blogs');
+            return res.redirect('/portofolios');
         }
     } catch (error) {
         if(error && error.name === 'ValidationError'){
-            return res.render('blog/view/form', {
+            return res.render('portofolio/view/form', {
                 error: 1, 
                 title: req.thisMenu ,
                 message: error.message, 
@@ -105,9 +110,10 @@ async function store(req, res, next) {
 async function edit(req, res, next) {
     try {
         let data = await Model.findOne({_id: req.params.id});
-        res.render('blog/view/form', { 
+        res.render('portofolio/view/form', { 
             title: req.thisMenu, 
-            data: data
+            data: data, 
+            edit: true
         });
     } catch (error) {
         res.render('main/404',{ 
@@ -124,33 +130,37 @@ async function update(req, res, next) {
         } else {
             payload = {...payload, is_active: 0};
         }
+        if(payload.price)
+            payload = {...payload, price: payload.price.replace(/[^0-9]/g, "")};
+            
         if (req.file) {
             let tmp_path = req.file.path;
             let originalExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
             let filename = req.file.filename + '.' + originalExt;
-            let target_path = path.resolve(config.rootPath, `public/images/blogs/${filename}`);
+            let target_path = path.resolve(config.rootPath, `public/images/portofolios/${filename}`);
             const src = fs.createReadStream(tmp_path); // baca file yang masih di lokasi sementara 
             const dest = fs.createWriteStream(target_path); // pindahkan file ke lokasi permanen
             src.pipe(dest); // mulai pindahkan file dari `src` ke `dest`
             src.on('end', async () => {
                 try {
                     let data = await Model.findOne({_id: payload._id});
-                    let currentImage = `${config.rootPath}/public/images/blogs/${data.image_url}`;
+                    let currentImage = `${config.rootPath}/public/images/portofolios/${data.image_url}`;
                     if(fs.existsSync(currentImage)){
                         fs.unlinkSync(currentImage);
                     }
                     data = await Model.findOneAndUpdate({_id: payload._id}, {...payload, image_url: filename}, {new: true, runValidators: true});
                     // return res.json(data);
-                    return res.redirect('/blogs');
+                    return res.redirect('/portofolios');
                 } catch (error) {
                     fs.unlinkSync(target_path);
                     if(error && error.name === 'ValidationError'){
-                        return res.render('blog/view/form', {
+                        return res.render('portofolio/view/form', {
                             error: 1, 
                             title: req.thisMenu ,
                             message: error.message, 
                             fields: error.errors, 
-                            data: req.body
+                            data: req.body, 
+                            edit: true
                         });
                     }
                     next(error);
@@ -162,16 +172,17 @@ async function update(req, res, next) {
         } else {
             let data = await Model.findOneAndUpdate({_id: payload._id}, payload, {new: true, runValidators: true});
             // return res.json(data);
-            return res.redirect('/blogs');
+            return res.redirect('/portofolios');
         }
     } catch (error) {
         if(error && error.name === 'ValidationError'){
-            return res.render('blog/view/form', {
+            return res.render('portofolio/view/form', {
                 error: 1, 
                 title: req.thisMenu ,
                 message: error.message, 
                 fields: error.errors, 
-                data: req.body
+                data: req.body, 
+                edit: true
             });
         }
         next(error);
@@ -181,12 +192,12 @@ async function update(req, res, next) {
 async function destroy(req, res, next) {
     try {
         let data = await Model.findOneAndDelete({_id: req.params.id});
-        let currentImage = `${config.rootPath}/public/images/blogs/${data.image_url}`;
+        let currentImage = `${config.rootPath}/public/images/portofolios/${data.image_url}`;
         if(fs.existsSync(currentImage)){
             fs.unlinkSync(currentImage)
         }
         return res.json(data);
-        // return res.redirect('/blogs');
+        // return res.redirect('/portofolios');
     } catch(error) {
         next(error);
     }
