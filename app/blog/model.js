@@ -7,7 +7,7 @@ const { model, Schema } = mongoose;
 const BlogSchema = Schema({
     title: {
         type: String, 
-        minlength: [3, 'Panjang nama makanan minimal 3 karakter'],
+        minlength: [3, 'Panjang nama minimal 3 karakter'],
         required: [true, 'Nama blog harus diisi']
     },
     description: {

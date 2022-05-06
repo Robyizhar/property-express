@@ -61,7 +61,9 @@ const indexRouter = require('./routes/index');
 const api = require('./routes/api');
 const Banner = require('./app/banner/router');
 const Blog = require('./app/blog/router');
+const Property = require('./app/property/router');
 const Portofolio = require('./app/portofolio/router');
+const Agent = require('./app/agent/router');
 
 app.use('/', indexRouter);
 app.use('/api', api);
@@ -69,7 +71,9 @@ app.use('/api', api);
 // ADMIN ROUTES
 app.use('/banners', Banner);
 app.use('/blogs', Blog);
+app.use('/properties', Property);
 app.use('/portofolios', Portofolio);
+app.use('/agents', Agent);
 
 app.use(function(req, res, next) {
   next(createError(404));

@@ -1,0 +1,161 @@
+<% extend('../../main/main') %>
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                                <li class="breadcrumb-item text-capitalize"><a href="/<%= title[1][0] %>"><%= title[1][0] %></a></li>
+                                <% if (title[2] != "") { %>
+                                    <li class="breadcrumb-item text-capitalize active"><%= title[2] %></li>
+                                <% } %>
+                            </ol>
+                        </div>
+                        <h4 class="page-title text-capitalize"><%= title[1][0] %></h4>
+                    </div>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form class="form-horizontal" action="<%= locals.edit ? '/agents/update' : '/agents/store' %>" method="post" enctype="multipart/form-data">
+                                <% if(locals.edit) {%>
+                                    <input type="hidden" value="<%= locals.data._id %>" name="_id">
+                                    <!-- <input name="_method" type="hidden" value="put"> -->
+                                <% } %>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Upload Photo Agent Disini</label>
+                                    <div class="col-9">
+                                        <input type="file" name="image" data-plugins="dropify" data-height="300" />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="name" class="col-3 col-form-label">Nama agent</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.name : '' %>" name="name" class="form-control" id="name" placeholder="Nama agent">
+                                        <% if(locals.error && locals.fields.name) {%> 
+                                            <p class="text-danger"><%= locals.fields.name.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="title" class="col-3 col-form-label">Judul agent</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.title : '' %>" name="title" class="form-control" id="title" placeholder="Judul agent">
+                                        <% if(locals.error && locals.fields.title) {%> 
+                                            <p class="text-danger"><%= locals.fields.title.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="description" class="col-3 col-form-label">Deskripsi</label>
+                                    <div class="col-9">
+                                        <textarea id="description" name="description" style="height: 300px;">
+                                            <%= locals.data ? locals.data.description : '' %>
+                                        </textarea>
+                                        <% if(locals.error && locals.fields.description) {%> 
+                                            <p class="text-danger"><%= locals.fields.description.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="whatsapp" class="col-3 col-form-label">Whatsapp</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.whatsapp : '' %>" name="whatsapp" class="form-control" id="whatsapp" placeholder="Whatsapp">
+                                        <% if(locals.error && locals.fields.whatsapp) {%> 
+                                            <p class="text-danger"><%= locals.fields.whatsapp.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="email" class="col-3 col-form-label">Email</label>
+                                    <div class="col-9">
+                                        <input type="email" value="<%= locals.data ? locals.data.email : '' %>" name="email" class="form-control" id="email" placeholder="Email">
+                                        <% if(locals.error && locals.fields.email) {%> 
+                                            <p class="text-danger"><%= locals.fields.email.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="facebook" class="col-3 col-form-label">Facebook</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.facebook : '' %>" name="facebook" class="form-control" id="facebook" placeholder="Link Profil Facebook">
+                                        <% if(locals.error && locals.fields.facebook) {%> 
+                                            <p class="text-danger"><%= locals.fields.facebook.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group row mb-3 justify-content-end">
+                                    <div class="col-9">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" <%= locals.data ? locals.data.is_active == 1 ? 'checked' : '' : '' %> name="is_active" class="custom-control-input" id="checkmeout">
+                                            <label class="custom-control-label" for="checkmeout">Active</label>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="form-group mb-0 justify-content-end row">
+                                    <div class="col-9">
+                                        <button type="submit" class="btn btn-info waves-effect waves-light" style="float: right;">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace('description');
+    });
+    const isNumericInput = (event) => {
+        const key = event.keyCode;
+        return ((key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    };
+    const isModifierKey = (event) => {
+        const key = event.keyCode;
+        return (key === 8 || key === 9 || key === 13 || key === 46) || (key > 36 && key < 41) || ( (event.ctrlKey === true || event.metaKey === true) && (key === 65 || key === 67 || key === 86 || key === 88 || key === 90) )
+    };
+    const enforceFormat = (event) => {
+        if(!isNumericInput(event) && !isModifierKey(event)){
+            event.preventDefault();
+        }
+    };
+    const formatToPhone = (event) => {
+        if(isModifierKey(event)) {return;}
+        const target = event.target;
+        const input = target.value.replace(/\D/g,'').substring(0,12);
+        const countryCode = input.substring(0,4);
+        const operatorCode = input.substring(4,8);
+        const middle = input.substring(8,12);
+        // const last = input.substring(12,15);
+
+        if(input.length > 9){target.value      = `${countryCode}-${operatorCode}-${middle}`;}
+        else if(input.length > 4){target.value = `${countryCode}-${operatorCode} ${middle}`;}
+        else if(input.length > 2){target.value = `${countryCode}-${operatorCode}`;}
+        else if(input.length > 0){target.value = `${countryCode} `;}
+    };
+    const inputMobile = document.getElementById('whatsapp'); //mobile Number
+    inputMobile.addEventListener('keydown',enforceFormat);
+    inputMobile.addEventListener('keyup',formatToPhone);
+</script>
+<% if(locals.data) {%> 
+    <% if(locals.data.image_url && locals.data.image_url != "") {%> 
+        <script>
+            $(document).ready(function () {
+                let image = `<%= locals.data.image_url %>`
+                $('.dropify-loader').css("display","none");
+                $('.dropify-preview').css("display","block");
+                $('.dropify-clear').css("display","block");
+                $('.dropify-filename-inner').html(image);
+                $('.dropify-preview').find('.dropify-render').append('<img src="/images/agents/'+image+'" alt="image">');
+            });
+        </script>
+    <% } %> 
+<% } %> 

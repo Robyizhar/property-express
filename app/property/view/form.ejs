@@ -1,0 +1,414 @@
+<% extend('../../main/main') %>
+<div class="content-page">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                                <li class="breadcrumb-item text-capitalize"><a href="/<%= title[1][0] %>"><%= title[1][0] %></a></li>
+                                <% if (title[2] != "") { %>
+                                    <li class="breadcrumb-item text-capitalize active"><%= title[2] %></li>
+                                <% } %>
+                            </ol>
+                        </div>
+                        <h4 class="page-title text-capitalize"><%= title[1][0] %></h4>
+                    </div>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form class="form-horizontal" action="<%= locals.edit ? '/properties/update' : '/properties/store' %>" method="post" enctype="multipart/form-data">
+                                <% if(locals.edit) {%>
+                                    <input type="hidden" value="<%= locals.data._id %>" name="_id">
+                                    <!-- <input name="_method" type="hidden" value="put"> -->
+                                <% } %>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Upload Gambar Utama Disini</label>
+                                    <div class="col-9">
+                                        <input type="file" name="image" data-plugins="dropify" data-height="300" />
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label class="col-3 col-form-label">Gambar Model</label>
+                                    <div class="col-9">
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input accept="image/png, image/gif, image/jpeg, image/jpg" multiple name="images" type="file" class="custom-file-input" id="images">
+                                                <label class="custom-file-label" for="images">Upload Beberapa Gambar(Max 10)</label>
+                                            </div>
+                                        </div>
+                                        <div id="image-preview"></div>
+                                        <% if(locals.edit && locals.images.length > 0) { %>
+                                            <% images.forEach(function(value, index){ %>
+                                            <span class="pip">
+                                                <img class="thumbnail" src="/images/properties/images/<%= value.image_url %>" title=""/>
+                                                <br/><span image="<%= value.image_url %>" class="remove btn-warning mb-1">Hapus</span>
+                                            </span>
+                                            <input type="hidden" class="old_images" value="" name="old_images">
+                                            <% }) %>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="title" class="col-3 col-form-label">Judul Property</label>
+                                    <div class="col-9">
+                                        <input type="text" value="<%= locals.data ? locals.data.title : '' %>" name="title" class="form-control" id="title" placeholder="Judul Property">
+                                        <% if(locals.error && locals.fields.title) {%> 
+                                            <p class="text-danger"><%= locals.fields.title.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <label for="description" class="col-3 col-form-label">Deskripsi</label>
+                                    <div class="col-9">
+                                        <textarea id="description" name="description" style="height: 300px;">
+                                            <%= locals.data ? locals.data.description : '' %>
+                                        </textarea>
+                                        <% if(locals.error && locals.fields.description) {%> 
+                                            <p class="text-danger"><%= locals.fields.description.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <div class="col-3">
+                                        <h2>Fasilitas</h2>
+                                    </div>
+                                    <div class="col-9">
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="floors" class="col-form-label">Jumlah Lantai</label>
+                                        <input type="number" min="0" value="<%= locals.data ? locals.data.floors : '' %>" name="floors" class="form-control input-number" id="floors">
+                                        <% if(locals.error && locals.fields.floors) {%> 
+                                            <p class="text-danger"><%= locals.fields.floors.message %> </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="bath" class="col-form-label">Jumlah Kamar Mandi</label>
+                                        <input type="number" min="0" value="<%= locals.data ? locals.data.bath : '' %>" name="bath" class="form-control input-number" id="bath">
+                                        <% if(locals.error && locals.fields.bath) {%> 
+                                            <p class="text-danger"><%= locals.fields.bath.message %> </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="beds" class="col-form-label">Jumlah Kamar Tidur</label>
+                                        <input type="number" min="0" value="<%= locals.data ? locals.data.beds : '' %>" name="beds" class="form-control input-number" id="beds">
+                                        <% if(locals.error && locals.fields.beds) {%> 
+                                            <p class="text-danger"><%= locals.fields.beds.message %> </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="area" class="col-form-label">Luas Bangunan</label>
+                                        <input type="number" min="0" value="<%= locals.data ? locals.data.area : '' %>" name="area" class="form-control input-number" id="area">
+                                        <% if(locals.error && locals.fields.area) {%> 
+                                            <p class="text-danger"><%= locals.fields.area.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <div class="col-3">
+                                        <h2>Harga & Status</h2>
+                                    </div>
+                                    <div class="col-9">
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="price" class="col-form-label">Harga</label>
+                                        <input type="text" value="<%= locals.data ? locals.data.price : '' %>" name="price" class="form-control input-number" id="price">
+                                        <% if(locals.error && locals.fields.price) {%> 
+                                            <p class="text-danger"><%= locals.fields.price.message %> </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="price" class="col-form-label">Status</label>
+                                        <input type="text" id="selectize-tags" name="status" value="<%= locals.edit ? locals.data.status : '' %>" tabindex="-1" class="selectized" style="display: none;">
+                                        <div class="selectize-control multi">
+                                            <div class="selectize-input items not-full has-options has-items">
+                                                <div class="item<%= locals.edit && locals.data.status == 'Sell' ? ' active' : '' %>" data-value="Sell">Sell</div>
+                                                <div class="item<%= locals.edit && locals.data.status == 'Rent' ? ' active' : '' %>" data-value="Rent"> Rent</div>
+                                                <input type="text" autocomplete="off" tabindex="" id="selectize-tags-selectized" style="width: 4px;">
+                                            </div>
+                                            <div class="selectize-dropdown multi" style="display: none;">
+                                                <div class="selectize-dropdown-content"></div>
+                                            </div>
+                                        </div>
+                                        <% if(locals.error && locals.fields.status) {%> 
+                                            <p class="text-danger"><%= locals.fields.status.message %> </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="agent" class="col-form-label">Agent</label>
+                                        <div class="dropdown bootstrap-select show-tick">
+                                            <select class="selectpicker show-tick" name="agent" id="agent" data-style="btn-light" tabindex="-98">
+                                                <% agents.forEach(function(value, index){ %>
+                                                    <option <%= locals.edit && String(locals.data.agent) == String(value._id) ? 'selected' : '' %>  value="<%= value._id %>"><%= value.name %> </option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                        <% if(locals.error && locals.fields.agent) {%> 
+                                            <p class="text-danger"><%= locals.fields.agent.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group row mb-3">
+                                    <div class="col-3">
+                                        <h2>Informasi Alamat</h2>
+                                    </div>
+                                    <div class="col-9">
+                                        <hr>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="province" class="col-form-label">Provinsi</label>
+                                        <select id="province" name="province" class="form-control">
+                                            <option value="">-Pilih-</option>
+                                        </select>
+                                        <% if(locals.error && locals.fields.province) {%> 
+                                            <p class="text-danger"><%= locals.fields.province.message %> </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="city" class="col-form-label">Kabupaten/Kota</label>
+                                        <select id="city" name="city" class="form-control">
+                                            <option value="">-Pilih-</option>
+                                        </select>
+                                        <% if(locals.error && locals.fields.city) {%> 
+                                            <p class="text-danger"><%= locals.fields.city.message %> </p>
+                                        <% } %>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="district" class="col-form-label">Kecamatan</label>
+                                        <select id="district" name="district" class="form-control">
+                                            <option value="">-Pilih-</option>
+                                        </select>
+                                        <% if(locals.error && locals.fields.district) {%> 
+                                            <p class="text-danger"><%= locals.fields.district.message %> </p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address" class="col-form-label">Alamat Lengkap</label>
+                                    <input type="text" value="<%= locals.data ? locals.data.address : '' %>" name="address" class="form-control" id="address" placeholder="1234 Main St">
+                                    <% if(locals.error && locals.fields.address) {%> 
+                                        <p class="text-danger"><%= locals.fields.address.message %> </p>
+                                    <% } %>
+                                </div>
+                                <div class="form-group row mb-3 justify-content-end">
+                                    <div class="col-12">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" <%= locals.data ? locals.data.is_active == 1 ? 'checked' : '' : '' %> name="is_active" class="custom-control-input" id="checkmeout">
+                                            <label class="custom-control-label" for="checkmeout">Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-0 justify-content-end row">
+                                    <div class="col-9">
+                                        <button type="submit" class="btn btn-info waves-effect waves-light" style="float: right;">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var nama_province = ''
+</script>
+<% if(locals.data && locals.error != 1) {%> 
+    <script>
+        nama_province = `<%= locals.data.province %>`;
+        let price = `<%= locals.data.price %>`;
+
+        let price_format = new Intl.NumberFormat('id-ID').format(price);
+        $('#price').val(price_format)
+    </script>
+<% } %>
+<script>
+
+    $(document).ready(function() {
+        if (window.File && window.FileList && window.FileReader) {
+            $("#images").on("change", function(e) {
+                const files = e.target.files, filesLength = files.length;
+                if (filesLength > 10) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'bottom-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Maksimal 10 Photo'
+                    });
+                    $('#images').val('');
+                    return false;
+                }
+                for (let i = 0; i < filesLength; i++) {
+                    let f = files[i]
+                    let fileReader = new FileReader();
+                    fileReader.onload = (function(e) {
+                        let file = e.target;
+                        $("<span class=\"pip\">" +
+                            "<img class=\"thumbnail\" src=\"" + e.target.result + "\" title=\"" + files.name + "\"/>" +
+                            "<br/><span class=\"remove btn-warning mb-1\">Hapus</span>" +
+                            "</span>").insertAfter("#image-preview");
+                        $(".remove").click(function(){
+                            $(this).parent(".pip").remove();
+                        });
+                    });
+                    fileReader.readAsDataURL(f);
+                }
+            });
+        } else {
+            Swal.fire( 'Browser Tidak Support !', 'error' )
+        }
+    });
+
+    var number = document.getElementById("price");
+    number.addEventListener('keyup', function(evt){
+        var n = parseInt(this.value.replace(/\D/g,''),10);
+        number.value = n.toLocaleString();
+        console.log(this.value);
+    }, false);
+
+    getProvinces(nama_province)
+
+    $('#province').on('change', function (e) {
+        let kode_provinsi = $('option:selected', this).attr('kode');
+        getCities(kode_provinsi)
+    });
+
+    $('#city').on('change', function (e) {
+        let kode_kabupaten = $('option:selected', this).attr('kode');
+        getDistrict(kode_kabupaten)
+    });
+
+    function getProvinces(nama) {
+        $.ajax({
+            method: "get",
+            url: "/api/provinces",
+            success: function (response) {
+                response.map(value => {
+                    let selected = '';
+                    if(nama == value.nama)
+                        selected = 'selected'
+
+                    $('#province').append(`<option kode="${value.kode}" ${selected} value="${value.nama}">${value.nama}</option>`);
+                })
+                if(nama != '')
+                    getOldCity()
+            }
+        });
+    }
+
+    function getCities(kode_provinsi, old_nama_kabupaten = ''){
+        $('#loading').css("display", "block");
+        $.ajax({
+            method: "get",
+            url: `/api/cities?kode_provinsi=${kode_provinsi}`,
+            success: function (response) {
+                $("#city").find('option').not(':first').remove();
+                $("#district").find('option').not(':first').remove();
+                response.map(value => {
+                    let selected = '';
+                    if(old_nama_kabupaten == value.nama)
+                        selected = 'selected'
+
+                    $('#city').append(`<option kode="${value.kode}" ${selected} value="${value.nama}">${value.nama}</option>`);
+
+                });
+                if (old_nama_kabupaten != '') {
+                    getOldDistrict()
+                }
+                $('#loading').css("display", "none");
+            }, error: function name(params) {
+                $('#loading').css("display", "none");
+            }
+        });
+    }
+
+    function getDistrict(kode_kabupaten, old_nama_kecamatan = '') {
+        $('#loading').css("display", "block");
+        $.ajax({
+            method: "get",
+            url: `/api/districts?kode_kabupaten=${kode_kabupaten}`,
+            success: function (response) {
+                $("#district").find('option').not(':first').remove();
+                response.map(value => {
+                    let selected = '';
+                    if(old_nama_kecamatan == value.nama)
+                        selected = 'selected'
+
+                    $('#district').append(`<option kode="${value.kode}" ${selected} value="${value.nama}">${value.nama}</option>`)
+                });
+                $('#loading').css("display", "none");
+            }, error: function name(params) {
+                $('#loading').css("display", "none");
+            }
+        });
+    }
+
+    let status = $('.selectize-control');
+
+    $(document).on('click', '.item', function (e) {
+        e.preventDefault();
+        let status = $(this).attr('data-value')
+        $(this).addClass("active");
+        $('.item').not(this).removeClass("active");
+        $('#selectize-tags').val(status)
+    })
+
+</script>
+<% if(locals.data) {%> 
+    <% if(locals.data.image_url && locals.data.image_url != "") {%> 
+        <script>
+            $(document).ready(function () {
+                let image = `<%= locals.data.image_url %>`
+                $('.dropify-loader').css("display","none");
+                $('.dropify-preview').css("display","block");
+                $('.dropify-clear').css("display","block");
+                $('.dropify-filename-inner').html(image);
+                $('.dropify-preview').find('.dropify-render').append('<img src="/images/properties/'+image+'" alt="image">');
+            });
+        </script>
+    <% } %>
+    <script>
+        $(".remove").click(function(){
+            $(this).parent(".pip").next().val($(this).attr('image'))
+            $(this).parent(".pip").remove();
+        });
+        function getOldCity() {
+            let old_nama_kabupaten = `<%= locals.data.city %>`
+            let kode_provinsi = $('select[name=province] option').filter(':selected').attr('kode');
+            getCities(kode_provinsi, old_nama_kabupaten)
+        }
+        function getOldDistrict() {
+            let old_nama_kecamatan = `<%= locals.data.district %>`
+            let kode_kabupaten = $('select[name=city] option').filter(':selected').attr('kode');
+            getDistrict(kode_kabupaten, old_nama_kecamatan)
+        }
+    </script>
+<% } %> 
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace('description');
+    });
+</script>
